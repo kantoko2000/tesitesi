@@ -9,6 +9,7 @@
       text-align: center;
       background-color: #fff0f5;
       font-family: sans-serif;
+      padding-bottom: 50px;
     }
     /* キャラクターのスタイル設定 */
     .character {
@@ -25,6 +26,42 @@
       50%  { transform: translateY(-50px) scale(1.1); }
       100% { transform: translateY(0) scale(1); }
     }
+
+    /* 追加：クイズコーナーのスタイル */
+    .quiz-container {
+      max-width: 500px;
+      margin: 40px auto 20px;
+      padding: 20px;
+      background-color: #ffffff;
+      border-radius: 15px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+    .quiz-title {
+      color: #ff69b4;
+      font-size: 1.3rem;
+      margin-bottom: 15px;
+    }
+    .quiz-option {
+      display: block;
+      width: 100%;
+      margin: 10px 0;
+      padding: 12px;
+      font-size: 1rem;
+      background-color: #ffe4e1;
+      border: 2px solid #ffb6c1;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+    .quiz-option:hover {
+      background-color: #ffc0cb;
+    }
+    #quizResult {
+      margin-top: 15px;
+      font-weight: bold;
+      font-size: 1.2rem;
+      min-height: 1.5em;
+    }
   </style>
 </head>
 <body>
@@ -38,6 +75,19 @@
 
   <p>ねこちゃんをタップするか、ボタンを押してね！</p>
   <button onclick="charaAction()" style="padding: 10px 20px; font-size: 1.2rem;">🎆 お祝いする！</button>
+
+  <!-- 追加：クイズコーナー -->
+  <div class="quiz-container">
+    <div class="quiz-title">🧩 ママクイズ 🧩</div>
+    <p>ママが一番好きな食べものはどれでしょう？</p>
+    
+    <!-- checkAnswer(true) が正解、checkAnswer(false) が不正解です -->
+    <button class="quiz-option" onclick="checkAnswer(false)">1. ラーメン</button>
+    <button class="quiz-option" onclick="checkAnswer(true)">2. ハンバーグ</button>
+    <button class="quiz-option" onclick="checkAnswer(false)">3. お寿司</button>
+
+    <div id="quizResult"></div>
+  </div>
 
   <script>
     function charaAction() {
@@ -53,6 +103,20 @@
       setTimeout(() => {
         chara.classList.remove('jump');
       }, 500);
+    }
+
+    /* 追加：クイズ判定処理 */
+    function checkAnswer(isCorrect) {
+      const result = document.getElementById('quizResult');
+      if (isCorrect) {
+        result.innerText = "大正解！🎉 おめでとう！";
+        result.style.color = "#ff1493";
+        // 正解したときもねこちゃんが跳ねて花火が上がる
+        charaAction();
+      } else {
+        result.innerText = "ざんねん！もう一回かんがえてみてね！";
+        result.style.color = "#dc143c";
+      }
     }
   </script>
 
