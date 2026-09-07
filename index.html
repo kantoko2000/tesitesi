@@ -108,11 +108,11 @@
       display: none;
     }
 
-    /* 迷路のスタイル（難関化に伴い拡大） */
+    /* 迷路のスタイル */
     .maze-wrapper {
       position: relative;
-      width: 372px;
-      height: 372px;
+      width: 342px;
+      height: 342px;
       margin: 15px auto;
       touch-action: none;
     }
@@ -147,7 +147,7 @@
       min-height: 1.2em;
     }
 
-    /* 全画面花火用キャンバス */
+    /* 背景透過の花火キャンバス */
     #fireworksCanvas {
       position: fixed;
       top: 0;
@@ -161,7 +161,7 @@
 </head>
 <body>
 
-  <!-- ド派手花火用キャンバス -->
+  <!-- 透明な花火用キャンバス -->
   <canvas id="fireworksCanvas"></canvas>
 
   <h1>ママ、お誕生日おめでとう！</h1>
@@ -182,7 +182,7 @@
   </div>
 
   <p>タップしてね！</p>
-  <button onclick="charaAction()" style="padding: 12px 25px; font-size: 1.2rem; background-color: #ff69b4; color: white; border: none; border-radius: 25px; cursor: pointer; box-shadow: 0 4px 8px rgba(0,0,0,0.2);">🎆 ド派手に祝う！</button>
+  <button onclick="charaAction()" style="padding: 12px 25px; font-size: 1.2rem; background-color: #ff69b4; color: white; border: none; border-radius: 25px; cursor: pointer; box-shadow: 0 4px 8px rgba(0,0,0,0.2);">🎆 お祝いする！</button>
 
   <!-- クイズコーナー -->
   <div class="card-container">
@@ -193,24 +193,24 @@
     <button id="nextBtn" class="btn-next" onclick="nextQuiz()">次の問題へ ➔</button>
   </div>
 
-  <!-- 迷路コーナー（大人向け超難関版） -->
+  <!-- 迷路コーナー -->
   <div class="card-container">
-    <div class="section-header">🌀 お誕生日めいろ（超・難関プロ版） 🌀</div>
-    <p style="font-size: 0.9rem; margin-bottom: 5px;">【大人向け難易度】スタート（🚩）からゴール（🎉）まで壁にぶつからずに辿り着けるか！？</p>
+    <div class="section-header">🌀 お誕生日めいろ（チャレンジ版） 🌀</div>
+    <p style="font-size: 0.9rem; margin-bottom: 5px;">スタート（🚩）からゴール（🎉）まで、壁にぶつからないように進んでね！</p>
 
     <div class="maze-wrapper">
-      <canvas id="mazeCanvas" width="372" height="372"></canvas>
+      <canvas id="mazeCanvas" width="342" height="342"></canvas>
     </div>
     <div id="mazeHint"></div>
 
     <button class="maze-btn" onclick="resetMaze()">🔄 やりなおす</button>
-    <button class="maze-btn" onclick="newMaze()" style="background-color:#2ed573;">🆕 新しい極悪迷路</button>
+    <button class="maze-btn" onclick="newMaze()" style="background-color:#2ed573;">🆕 新しい迷路</button>
     <div id="mazeResult"></div>
   </div>
 
   <script>
     // ====================================================
-    // 🎆 1. ド派手な打ち上げ花火エフェクト
+    // 🎆 1. 画面維持・華やか打ち上げ花火（透過型）
     // ====================================================
     const fwCanvas = document.getElementById('fireworksCanvas');
     const fwCtx = fwCanvas.getContext('2d');
@@ -230,18 +230,18 @@
         this.y = y;
         this.color = color;
         const angle = Math.random() * Math.PI * 2;
-        const speed = Math.random() * 8 + 2; // 勢いよく弾ける
+        const speed = Math.random() * 7 + 3; // 勢いよく弾ける
         this.vx = Math.cos(angle) * speed;
         this.vy = Math.sin(angle) * speed;
         this.alpha = 1;
-        this.decay = Math.random() * 0.015 + 0.008; // 徐々に消える
-        this.gravity = 0.12; // 重力で下に落ちる
-        this.size = Math.random() * 3 + 2;
+        this.decay = Math.random() * 0.02 + 0.012; // 綺麗に消える速度
+        this.gravity = 0.1;
+        this.size = Math.random() * 4 + 2;
       }
 
       update() {
-        this.vx *= 0.96;
-        this.vy *= 0.96;
+        this.vx *= 0.95;
+        this.vy *= 0.95;
         this.vy += this.gravity;
         this.x += this.vx;
         this.y += this.vy;
@@ -254,7 +254,7 @@
         fwCtx.beginPath();
         fwCtx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
         fwCtx.fillStyle = this.color;
-        fwCtx.shadowBlur = 10;
+        fwCtx.shadowBlur = 8;
         fwCtx.shadowColor = this.color;
         fwCtx.fill();
         fwCtx.restore();
@@ -262,9 +262,9 @@
     }
 
     function createFirework(x, y) {
-      const colors = ['#ff4757', '#ffa502', '#2ed573', '#1e90ff', '#e84393', '#ffffff', '#eccc68'];
+      const colors = ['#ff4757', '#ffa502', '#2ed573', '#1e90ff', '#e84393', '#ff007f', '#ffd700'];
       const baseColor = colors[Math.floor(Math.random() * colors.length)];
-      const particleCount = 120; // 粒子の数を増やしてド派手に
+      const particleCount = 80;
 
       for (let i = 0; i < particleCount; i++) {
         particles.push(new Particle(x, y, baseColor));
@@ -273,8 +273,8 @@
 
     let animId = null;
     function animateFireworks() {
-      fwCtx.fillStyle = 'rgba(0, 0, 0, 0.2)'; // 残像を残して暗く演出
-      fwCtx.fillRect(0, 0, fwWidth, fwHeight);
+      // 画面を暗くせず、クリアして元背景を維持
+      fwCtx.clearRect(0, 0, fwWidth, fwHeight);
 
       particles = particles.filter(p => p.alpha > 0);
       particles.forEach(p => {
@@ -291,17 +291,16 @@
       }
     }
 
-    // 連続でどーんと打ち上げる関数
     function launchFireworks() {
       let count = 0;
       const interval = setInterval(() => {
-        const x = fwWidth * (0.2 + Math.random() * 0.6);
-        const y = fwHeight * (0.2 + Math.random() * 0.4);
+        const x = fwWidth * (0.25 + Math.random() * 0.5);
+        const y = fwHeight * (0.2 + Math.random() * 0.35);
         createFirework(x, y);
         if (!animId) animateFireworks();
         count++;
-        if (count >= 7) clearInterval(interval); // 7連続でどーん！
-      }, 250);
+        if (count >= 6) clearInterval(interval); // パッと連続で花火が開く
+      }, 200);
     }
 
     function charaAction() {
@@ -388,11 +387,11 @@
     loadQuiz();
 
     // ====================================================
-    // 🌀 3. 大人向け・超難関迷路（31x31高密度）
+    // 🌀 3. ちょうど良いバランスの迷路（19x19）
     // ====================================================
     const canvas = document.getElementById('mazeCanvas');
     const ctx = canvas.getContext('2d');
-    const MAZE_SIZE = 31; // 15から31へ拡大（超難関）
+    const MAZE_SIZE = 19; // 程よいやりごたえの19x19
     const cellSize = canvas.width / MAZE_SIZE;
     const startCell = { x: 1, y: 1 };
     const goalCell = { x: MAZE_SIZE - 2, y: MAZE_SIZE - 2 };
@@ -402,7 +401,6 @@
     let isCleared = false;
     let lastCell = null;
 
-    // 穴掘り法（深さ優先探索で複雑で長距離のコースを生成）
     function generateMaze(size) {
       const g = Array.from({ length: size }, () => Array(size).fill(1));
 
@@ -437,13 +435,12 @@
 
       for (let r = 0; r < MAZE_SIZE; r++) {
         for (let c = 0; c < MAZE_SIZE; c++) {
-          ctx.fillStyle = grid[r][c] === 1 ? "#34495e" : "#ffffff"; // 壁を黒っぽくして難易度の高さを視覚強調
+          ctx.fillStyle = grid[r][c] === 1 ? "#ffb6c1" : "#ffffff";
           ctx.fillRect(c * cellSize, r * cellSize, cellSize, cellSize);
         }
       }
 
-      // スタートとゴール
-      ctx.font = Math.floor(cellSize * 1.2) + "px sans-serif";
+      ctx.font = Math.floor(cellSize * 0.9) + "px sans-serif";
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
       ctx.fillText("🚩", startCell.x * cellSize + cellSize / 2, startCell.y * cellSize + cellSize / 2);
@@ -490,7 +487,7 @@
         ctx.beginPath();
         ctx.moveTo(pos.x, pos.y);
         ctx.strokeStyle = "#ff1493";
-        ctx.lineWidth = 4;
+        ctx.lineWidth = 5;
         ctx.lineCap = "round";
         ctx.lineJoin = "round";
       }
@@ -516,13 +513,13 @@
         if (cx === goalCell.x && cy === goalCell.y) {
           isDrawing = false;
           isCleared = true;
-          document.getElementById('mazeResult').innerText = "🏆 超難関迷路クリア！お見事です！！ 🏆";
+          document.getElementById('mazeResult').innerText = "🎉 ゴール達成！おめでとう！！ 🎉";
           document.getElementById('mazeHint').innerText = "";
           launchFireworks();
         }
       } else {
         lastCell = null;
-        document.getElementById('mazeHint').innerText = "⚠️ 壁に接触！慎重に進んでください！";
+        document.getElementById('mazeHint').innerText = "壁にぶつかったよ！道を通ってね";
         clearTimeout(window._mazeHintTimer);
         window._mazeHintTimer = setTimeout(() => {
           document.getElementById('mazeHint').innerText = "";
