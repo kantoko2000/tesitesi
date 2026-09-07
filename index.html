@@ -129,32 +129,37 @@
   </div>
 
   <script>
-    // 花びらと花火が一緒に舞い上がる演出
+// 細かい火花がパチパチ弾ける花火演出
     function charaAction() {
       const chara = document.getElementById('myChara');
       chara.classList.add('jump');
 
-      // 1. 豪華な花火演出
+      // 1. 中央から打ち上がる細かい火花（粒を小さく・数を多く）
       confetti({
-        particleCount: 80,
-        spread: 100,
+        particleCount: 150, // 粒の数を増加
+        spread: 100,        // 広がり
+        startVelocity: 45,  // 打ち上げる勢い
+        scalar: 0.6,        // 粒の大きさを小さく（デフォルトは1）
+        ticks: 200,         // 画面に残る時間を少し長く
         origin: { y: 0.6 }
       });
 
-      // 2. ピンクの花びらが舞う演出（ピンク系の色に絞って降らせる）
+      // 2. 左右から弾ける金色の細かい花火
       confetti({
-        particleCount: 40,
+        particleCount: 80,
         angle: 60,
-        spread: 55,
-        origin: { x: 0 },
-        colors: ['#ffb6c1', '#ff69b4', '#ff1493', '#ffffff']
+        spread: 80,
+        scalar: 0.5,        // さらに細かい火花
+        origin: { x: 0, y: 0.7 },
+        colors: ['#ffd700', '#ffaa00', '#ff69b4', '#ffffff']
       });
       confetti({
-        particleCount: 40,
+        particleCount: 80,
         angle: 120,
-        spread: 55,
-        origin: { x: 1 },
-        colors: ['#ffb6c1', '#ff69b4', '#ff1493', '#ffffff']
+        spread: 80,
+        scalar: 0.5,        // さらに細かい火花
+        origin: { x: 1, y: 0.7 },
+        colors: ['#ffd700', '#ffaa00', '#ff69b4', '#ffffff']
       });
 
       setTimeout(() => {
