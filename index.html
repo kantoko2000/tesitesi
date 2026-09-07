@@ -51,7 +51,7 @@
       100% { transform: translateY(0) scale(1); }
     }
 
-    /* クイズ＆迷路の共通カードスタイル */
+    /* 共通カードスタイル */
     .card-container {
       max-width: 500px;
       margin: 30px auto 20px;
@@ -111,10 +111,10 @@
     /* 迷路のスタイル */
     .maze-wrapper {
       position: relative;
-      width: 300px;
-      height: 300px;
+      width: 320px;
+      height: 320px;
       margin: 15px auto;
-      touch-action: none; /* タブレットでのスクロール動作を防止 */
+      touch-action: none;
     }
     canvas {
       border: 4px solid #ffb6c1;
@@ -123,19 +123,20 @@
       cursor: crosshair;
     }
     .maze-btn {
-      padding: 8px 18px;
-      font-size: 0.9rem;
+      padding: 10px 20px;
+      font-size: 1rem;
       background-color: #ff69b4;
       color: white;
       border: none;
-      border-radius: 15px;
+      border-radius: 20px;
       cursor: pointer;
       margin-top: 10px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
     }
     #mazeResult {
-      margin-top: 10px;
+      margin-top: 15px;
       font-weight: bold;
-      font-size: 1.2rem;
+      font-size: 1.5rem;
       color: #ff1493;
       min-height: 1.5em;
     }
@@ -166,7 +167,7 @@
   <!-- クイズコーナー -->
   <div class="card-container">
     <div class="section-header" id="quizNum">🧩 ママクイズ (1/3問) 🧩</div>
-    <div class="quiz-question" id="quizQuestion">第1问：ママが一番好きな食べものはどれでしょう？</div>
+    <div class="quiz-question" id="quizQuestion">第1問：ママが一番好きな食べものはどれでしょう？</div>
     <div id="quizOptions"></div>
     <div id="quizResult"></div>
     <button id="nextBtn" class="btn-next" onclick="nextQuiz()">次の問題へ ➔</button>
@@ -174,22 +175,22 @@
 
   <!-- 迷路コーナー -->
   <div class="card-container">
-    <div class="section-header">🌀 お誕生日めいろ 🌀</div>
-    <p style="font-size: 0.95rem; margin-bottom: 5px;">指でなぞってスタート（🚩）からゴール（🎉）を目指そう！</p>
+    <div class="section-header">🌀 お誕生日むずかしめいろ 🌀</div>
+    <p style="font-size: 0.95rem; margin-bottom: 5px;">指かマウスでスタート（🚩）からゴール（🎉）までなぞってね！</p>
     
     <div class="maze-wrapper">
-      <canvas id="mazeCanvas" width="300" height="300"></canvas>
+      <canvas id="mazeCanvas" width="320" height="320"></canvas>
     </div>
 
-    <button class="maze-btn" onclick="resetMaze()">🔄 もういちどやり直す</button>
+    <button class="maze-btn" onclick="resetMaze()">🔄 やりなおす</button>
     <div id="mazeResult"></div>
   </div>
 
   <script>
-    // 花火演出
+    // 修正版：花火演出（エラー回避＆動作軽量化）
     function charaAction() {
       const chara = document.getElementById('myChara');
-      chara.classList.add('jump');
+      if (chara) chara.classList.add('jump');
 
       const colorfulGlitters = [
         '#FFD700', '#C0C0C0', '#FFFFFF',
@@ -198,15 +199,19 @@
         '#00BBF9', '#F15BB5', '#FEE440'
       ];
 
-      confetti({ particleCount: 250, spread: 140, startVelocity: 60, scalar: 0.45, ticks: 300, origin: { y: 0.6 }, colors: colorfulGlitters });
-      confetti({ particleCount: 150, angle: 60, spread: 90, startVelocity: 65, scalar: 0.4, origin: { x: 0, y: 0.8 }, colors: colorfulGlitters });
-      confetti({ particleCount: 150, angle: 120, spread: 90, startVelocity: 65, scalar: 0.4, origin: { x: 1, y: 0.8 }, colors: colorfulGlitters });
+      if (typeof confetti === 'function') {
+        confetti({ particleCount: 200, spread: 130, startVelocity: 55, scalar: 0.5, ticks: 250, origin: { y: 0.6 }, colors: colorfulGlitters });
+        confetti({ particleCount: 120, angle: 60, spread: 80, startVelocity: 60, scalar: 0.45, origin: { x: 0, y: 0.8 }, colors: colorfulGlitters });
+        confetti({ particleCount: 120, angle: 120, spread: 80, startVelocity: 60, scalar: 0.45, origin: { x: 1, y: 0.8 }, colors: colorfulGlitters });
+
+        setTimeout(() => {
+          confetti({ particleCount: 80, spread: 160, startVelocity: 30, scalar: 0.5, ticks: 200, origin: { y: 0.2 }, colors: colorfulGlitters });
+        }, 150);
+      }
 
       setTimeout(() => {
-        confetti({ particleCount: 100, spread: 180, startVelocity: 30, scalar: 0.5, ticks: 200, origin: { y: 0.2 }, colors: colorfulGlitters });
-      }, 150);
-
-      setTimeout(() => { chara.classList.remove('jump'); }, 500);
+        if (chara) chara.classList.remove('jump');
+      }, 500);
     }
 
     // クイズの処理
@@ -269,7 +274,7 @@
           result.innerText = "全問正解！🎉 ママ、いつもありがとう！！❤️";
         }
       } else {
-        result.innerText = "ざんねn！もう一回かんがえてみてね！";
+        result.innerText = "ざんねん！もう一回かんがえてみてね！";
         result.style.color = "#dc143c";
       }
     }
@@ -282,39 +287,44 @@
     loadQuiz();
 
     // ----------------------------------------------------
-    // 迷路のプログラム（指でなぞる処理）
+    // 難易度アップ版 迷路（16x16）＆ 指・マウス両対応
     // ----------------------------------------------------
     const canvas = document.getElementById('mazeCanvas');
     const ctx = canvas.getContext('2d');
     let isDrawing = false;
     let isCleared = false;
 
-    // 迷路データ (1: 壁, 0: 通路)
+    // 16x16の難しい迷路データ (1: 壁, 0: 通路)
     const grid = [
-      [1,1,1,1,1,1,1,1,1,1],
-      [1,0,0,0,1,0,0,0,0,1],
-      [1,1,1,0,1,0,1,1,0,1],
-      [1,0,0,0,0,0,1,0,0,1],
-      [1,0,1,1,1,1,1,0,1,1],
-      [1,0,1,0,0,0,0,0,0,1],
-      [1,0,1,0,1,1,1,1,0,1],
-      [1,0,0,0,1,0,0,1,0,1],
-      [1,1,1,0,0,0,1,1,0,1],
-      [1,1,1,1,1,1,1,1,1,1]
+      [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+      [1,0,0,0,1,0,0,0,0,0,1,0,0,0,0,1],
+      [1,0,1,0,1,0,1,1,1,0,1,0,1,1,0,1],
+      [1,0,1,0,0,0,1,0,0,0,1,0,1,0,0,1],
+      [1,0,1,1,1,1,1,0,1,1,1,0,1,0,1,1],
+      [1,0,0,0,0,0,1,0,0,0,0,0,1,0,0,1],
+      [1,1,1,1,1,0,1,1,1,1,1,1,1,1,0,1],
+      [1,0,0,0,1,0,0,0,0,0,0,0,0,1,0,1],
+      [1,0,1,0,1,1,1,1,1,1,1,1,0,1,0,1],
+      [1,0,1,0,0,0,0,0,0,0,0,1,0,1,0,1],
+      [1,0,1,1,1,1,1,1,1,1,0,1,0,1,0,1],
+      [1,0,0,0,0,0,0,0,0,1,0,1,0,0,0,1],
+      [1,1,1,1,1,1,1,1,0,1,0,1,1,1,1,1],
+      [1,0,0,0,0,0,0,1,0,1,0,0,0,0,0,1],
+      [1,0,1,1,1,1,0,0,0,1,1,1,1,1,0,1],
+      [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
     ];
 
-    const cellSize = 30; // 300px / 10セル = 30px
+    const cellSize = 20; // 320px / 16 = 20px
     const startCell = { x: 1, y: 1 };
-    const goalCell = { x: 8, y: 8 };
+    const goalCell = { x: 14, y: 14 };
 
     function drawMaze() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      // 壁と通路を描画
-      for (let r = 0; r < 10; r++) {
-        for (let c = 0; c < 10; c++) {
+      for (let r = 0; r < 16; r++) {
+        for (let c = 0; c < 16; c++) {
           if (grid[r][c] === 1) {
-            ctx.fillStyle = "#ffb6c1"; // 壁の色（ピンク）
+            ctx.fillStyle = "#ffb6c1";
             ctx.fillRect(c * cellSize, r * cellSize, cellSize, cellSize);
           } else {
             ctx.fillStyle = "#ffffff";
@@ -323,20 +333,25 @@
         }
       }
 
-      // スタートアイコン (🚩)
-      ctx.font = "20px sans-serif";
+      ctx.font = "14px sans-serif";
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
-      ctx.fillText("🚩", startCell.x * cellSize + 15, startCell.y * cellSize + 15);
-
-      // ゴールアイコン (🎉)
-      ctx.fillText("🎉", goalCell.x * cellSize + 15, goalCell.y * cellSize + 15);
+      ctx.fillText("🚩", startCell.x * cellSize + 10, startCell.y * cellSize + 10);
+      ctx.fillText("🎉", goalCell.x * cellSize + 10, goalCell.y * cellSize + 10);
     }
 
     function getPos(e) {
       const rect = canvas.getBoundingClientRect();
-      const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-      const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+      let clientX, clientY;
+
+      if (e.touches && e.touches.length > 0) {
+        clientX = e.touches[0].clientX;
+        clientY = e.touches[0].clientY;
+      } else {
+        clientX = e.clientX;
+        clientY = e.clientY;
+      }
+
       return {
         x: clientX - rect.left,
         y: clientY - rect.top
@@ -349,13 +364,12 @@
       const cellX = Math.floor(pos.x / cellSize);
       const cellY = Math.floor(pos.y / cellSize);
 
-      // スタート位置付近から描き始めた場合のみ反応
       if (Math.abs(cellX - startCell.x) <= 1 && Math.abs(cellY - startCell.y) <= 1) {
         isDrawing = true;
         ctx.beginPath();
         ctx.moveTo(pos.x, pos.y);
-        ctx.strokeStyle = "#ff1493"; // 線（ペン）の色
-        ctx.lineWidth = 8;
+        ctx.strokeStyle = "#ff1493";
+        ctx.lineWidth = 6;
         ctx.lineCap = "round";
         ctx.lineJoin = "round";
       }
@@ -363,20 +377,21 @@
 
     function draw(e) {
       if (!isDrawing || isCleared) return;
-      e.preventDefault();
+      if (e.cancelable) e.preventDefault();
+
       const pos = getPos(e);
 
       ctx.lineTo(pos.x, pos.y);
       ctx.stroke();
 
-      // ゴール判定
       const cellX = Math.floor(pos.x / cellSize);
       const cellY = Math.floor(pos.y / cellSize);
+
       if (cellX === goalCell.x && cellY === goalCell.y) {
         isDrawing = false;
         isCleared = true;
-        document.getElementById('mazeResult').innerText = "ゴール達成！おめでとう！🎉";
-        charaAction(); // 豪華花火発動！
+        document.getElementById('mazeResult').innerText = "🎉 ゴール達成！おめでとう！！ 🎉";
+        charaAction();
       }
     }
 
@@ -390,16 +405,15 @@
       drawMaze();
     }
 
-    // イベント登録（マウス & タッチ・タブレット対応）
+    // イベント登録（マウス＆タッチ共存対応）
     canvas.addEventListener('mousedown', startDrawing);
     canvas.addEventListener('mousemove', draw);
-    canvas.addEventListener('mouseup', stopDrawing);
+    window.addEventListener('mouseup', stopDrawing);
 
     canvas.addEventListener('touchstart', startDrawing, { passive: false });
     canvas.addEventListener('touchmove', draw, { passive: false });
-    canvas.addEventListener('touchend', stopDrawing);
+    window.addEventListener('touchend', stopDrawing);
 
-    // 初期表示
     drawMaze();
   </script>
 
