@@ -2,21 +2,42 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ママお誕生日おめでとう！</title>
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
   <style>
+    /* 背景をパステル調の虹色グラデーションに設定 */
     body {
       text-align: center;
-      background-color: #fff0f5;
-      font-family: sans-serif;
+      background: linear-gradient(135deg, #ffdde1, #ee9ca7, #ffdde1, #a8edea, #fed6e3, #d4fc79);
+      background-size: 400% 400%;
+      animation: rainbowBG 15s ease infinite;
+      font-family: 'Helvetica Neue', Arial, sans-serif;
       padding-bottom: 50px;
+      margin: 0;
     }
+
+    @keyframes rainbowBG {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    /* タイトルを鮮やかなピンク色に変更 */
+    h1 {
+      color: #ff1493;
+      text-shadow: 2px 2px 4px rgba(255, 255, 255, 0.8);
+      font-size: 2.2rem;
+      margin-top: 20px;
+    }
+
     /* キャラクターのスタイル設定 */
     .character {
       width: 120px;
       transition: transform 0.3s ease;
       cursor: pointer;
     }
+
     /* 跳ねるアニメーションクラス */
     .jump {
       animation: jump-up 0.5s ease;
@@ -27,18 +48,24 @@
       100% { transform: translateY(0) scale(1); }
     }
 
-    /* 追加：クイズコーナーのスタイル */
+    /* クイズコーナーのスタイル */
     .quiz-container {
       max-width: 500px;
-      margin: 40px auto 20px;
-      padding: 20px;
-      background-color: #ffffff;
-      border-radius: 15px;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      margin: 30px auto 20px;
+      padding: 25px;
+      background-color: rgba(255, 255, 255, 0.9);
+      border-radius: 20px;
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
     }
-    .quiz-title {
+    .quiz-header {
       color: #ff69b4;
-      font-size: 1.3rem;
+      font-size: 1.4rem;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+    .quiz-question {
+      font-size: 1.1rem;
+      font-weight: bold;
       margin-bottom: 15px;
     }
     .quiz-option {
@@ -47,14 +74,15 @@
       margin: 10px 0;
       padding: 12px;
       font-size: 1rem;
-      background-color: #ffe4e1;
+      background-color: #fff0f5;
       border: 2px solid #ffb6c1;
-      border-radius: 10px;
+      border-radius: 12px;
       cursor: pointer;
-      transition: background-color 0.2s;
+      transition: all 0.2s;
     }
     .quiz-option:hover {
       background-color: #ffc0cb;
+      transform: scale(1.02);
     }
     #quizResult {
       margin-top: 15px;
@@ -62,62 +90,156 @@
       font-size: 1.2rem;
       min-height: 1.5em;
     }
+    .btn-next {
+      margin-top: 15px;
+      padding: 10px 20px;
+      font-size: 1rem;
+      background-color: #2ed573;
+      color: white;
+      border: none;
+      border-radius: 20px;
+      cursor: pointer;
+      display: none;
+    }
   </style>
 </head>
 <body>
 
   <h1>ママ、お誕生日おめでとう！</h1>
 
-  <!-- キャラクター画像（クリックしても跳ねます） -->
+  <!-- キャラクター画像 -->
   <div>
     <img id="myChara" class="character" src="https://api.iconify.design/noto:cat-face.svg" alt="ねこちゃん" onclick="charaAction()">
   </div>
 
   <p>ねこちゃんをタップするか、ボタンを押してね！</p>
-  <button onclick="charaAction()" style="padding: 10px 20px; font-size: 1.2rem;">🎆 お祝いする！</button>
+  <button onclick="charaAction()" style="padding: 12px 25px; font-size: 1.2rem; background-color: #ff69b4; color: white; border: none; border-radius: 25px; cursor: pointer; box-shadow: 0 4px 8px rgba(0,0,0,0.2);">🎆 お祝いする！</button>
 
-  <!-- 追加：クイズコーナー -->
+  <!-- クイズコーナー（3問形式） -->
   <div class="quiz-container">
-    <div class="quiz-title">🧩 ママクイズ 🧩</div>
-    <p>ママが一番好きな食べものはどれでしょう？</p>
+    <div class="quiz-header" id="quizNum">🧩 ママクイズ (1/3問) 🧩</div>
+    <div class="quiz-question" id="quizQuestion">第1問：ママが一番好きな食べものはどれでしょう？</div>
     
-    <!-- checkAnswer(true) が正解、checkAnswer(false) が不正解です -->
-    <button class="quiz-option" onclick="checkAnswer(false)">1. ラーメン</button>
-    <button class="quiz-option" onclick="checkAnswer(true)">2. ハンバーグ</button>
-    <button class="quiz-option" onclick="checkAnswer(false)">3. お寿司</button>
+    <div id="quizOptions">
+      <!-- 選択肢がJavaScriptで切り替わります -->
+    </div>
 
     <div id="quizResult"></div>
+    <button id="nextBtn" class="btn-next" onclick="nextQuiz()">次の問題へ ➔</button>
   </div>
 
   <script>
+    // 花びらと花火が一緒に舞い上がる演出
     function charaAction() {
       const chara = document.getElementById('myChara');
-      
-      // ジャンプアニメーションを適用
       chara.classList.add('jump');
-      
-      // 花火をあげる
-      confetti({ particleCount: 80, spread: 60 });
 
-      // アニメーションが終わったらクラスを外す（再度押せるようにする）
+      // 1. 豪華な花火演出
+      confetti({
+        particleCount: 80,
+        spread: 100,
+        origin: { y: 0.6 }
+      });
+
+      // 2. ピンクの花びらが舞う演出（ピンク系の色に絞って降らせる）
+      confetti({
+        particleCount: 40,
+        angle: 60,
+        spread: 55,
+        origin: { x: 0 },
+        colors: ['#ffb6c1', '#ff69b4', '#ff1493', '#ffffff']
+      });
+      confetti({
+        particleCount: 40,
+        angle: 120,
+        spread: 55,
+        origin: { x: 1 },
+        colors: ['#ffb6c1', '#ff69b4', '#ff1493', '#ffffff']
+      });
+
       setTimeout(() => {
         chara.classList.remove('jump');
       }, 500);
     }
 
-    /* 追加：クイズ判定処理 */
+    // --- クイズデータ（全3問） ---
+    const quizData = [
+      {
+        question: "第1問：ママが一番好きな食べものはどれでしょう？",
+        options: [
+          { text: "1. ラーメン", correct: false },
+          { text: "2. ハンバーグ", correct: true },
+          { text: "3. お寿司", correct: false }
+        ]
+      },
+      {
+        question: "第2問：ママが一番好きな色は何色でしょう？",
+        options: [
+          { text: "1. ピンク", correct: true },
+          { text: "2. 青", correct: false },
+          { text: "3. きいろ", correct: false }
+        ]
+      },
+      {
+        question: "第3問：ママが休みの日にしたいことはどれでしょう？",
+        options: [
+          { text: "1. お買い物", correct: false },
+          { text: "2. のんびりお昼寝", correct: true },
+          { text: "3. お散歩", correct: false }
+        ]
+      }
+    ];
+
+    let currentQuiz = 0;
+
+    // クイズの表示更新
+    function loadQuiz() {
+      const q = quizData[currentQuiz];
+      document.getElementById('quizNum').innerText = `🧩 ママクイズ (${currentQuiz + 1}/3問) 🧩`;
+      document.getElementById('quizQuestion').innerText = q.question;
+      
+      const optionsDiv = document.getElementById('quizOptions');
+      optionsDiv.innerHTML = "";
+      document.getElementById('quizResult').innerText = "";
+      document.getElementById('nextBtn').style.display = "none";
+
+      q.options.forEach(opt => {
+        const btn = document.createElement('button');
+        btn.className = "quiz-option";
+        btn.innerText = opt.text;
+        btn.onclick = () => checkAnswer(opt.correct);
+        optionsDiv.appendChild(btn);
+      });
+    }
+
+    // 正誤判定
     function checkAnswer(isCorrect) {
       const result = document.getElementById('quizResult');
       if (isCorrect) {
-        result.innerText = "大正解！🎉 おめでとう！";
+        result.innerText = "大正解！🎉 すごい！";
         result.style.color = "#ff1493";
-        // 正解したときもねこちゃんが跳ねて花火が上がる
-        charaAction();
+        charaAction(); // 花火＆花びら
+
+        // 最終問題でなければ「次へ」ボタンを表示
+        if (currentQuiz < quizData.length - 1) {
+          document.getElementById('nextBtn').style.display = "inline-block";
+        } else {
+          result.innerText = "全問正解！🎉 ママ、いつもありがとう！！❤️";
+        }
       } else {
         result.innerText = "ざんねん！もう一回かんがえてみてね！";
         result.style.color = "#dc143c";
       }
     }
+
+    // 次のクイズへ
+    function nextQuiz() {
+      currentQuiz++;
+      loadQuiz();
+    }
+
+    // 初期読み込み時に第1問を表示
+    loadQuiz();
   </script>
 
 </body>
