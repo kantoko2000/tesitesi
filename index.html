@@ -129,51 +129,73 @@
   </div>
 
   <script>
-// 金色・銀色の細かい火花が大量に弾けるゴージャス花火演出
+// 金銀＋カラフル豪華ネオンカラーが爆発する超ド派手花火演出
     function charaAction() {
       const chara = document.getElementById('myChara');
       chara.classList.add('jump');
 
-      // 金色と銀色を基調にしたゴージャスなカラーパレット
-      const goldSilver = ['#FFD700', '#FFA500', '#C0C0C0', '#E6E6FA', '#FFFFFF', '#FF69B4'];
+      // 金銀＋超華やかなパステル＆ネオンカラーのスペシャルミックス
+      const colorfulGlitters = [
+        '#FFD700', '#C0C0C0', '#FFFFFF', // 金・銀・白
+        '#FF007F', '#FF69B4', '#FF1493', // 派手なピンク
+        '#00F5D4', '#7B2CBF', '#FF9E00', // エメラルドグリーン・紫・ビビッドオレンジ
+        '#00BBF9', '#F15BB5', '#FEE440'  # ネオンブルー・マゼンタ・イエロー
+      ];
 
-      // 1. 中央から一気に吹き出す金色・銀色の大量の細かな火花
+      // 1. ドカンと中央から弾ける超大量の細かいカラフル火花（250発）
       confetti({
-        particleCount: 200, // 粒の数を大量に増量！
-        spread: 120,        // 広がりを大きく
-        startVelocity: 50,  // 打ち上げる勢い
-        scalar: 0.5,        // 火花のように粒を小さく
-        ticks: 250,         // 画面に残る時間を長く
+        particleCount: 250,
+        spread: 140,
+        startVelocity: 60,
+        scalar: 0.45,
+        ticks: 300,
         origin: { y: 0.6 },
-        colors: goldSilver
+        colors: colorfulGlitters
       });
 
-      // 2. 左下から打ち上がるキラキラの金銀クラッカー
+      // 2. 左下から斜め上に打ち上がる華やかなキラキラ（150発）
       confetti({
-        particleCount: 100,
+        particleCount: 150,
         angle: 60,
-        spread: 70,
-        startVelocity: 55,
-        scalar: 0.4,        // 超極小の火花
+        spread: 90,
+        startVelocity: 65,
+        scalar: 0.4,
         origin: { x: 0, y: 0.8 },
-        colors: goldSilver
+        colors: colorfulGlitters
       });
 
-      // 3. 右下から打ち上がるキラキラの金銀クラッカー
+      // 3. 右下から斜め上に打ち上がる華やかなキラキラ（150発）
       confetti({
-        particleCount: 100,
+        particleCount: 150,
         angle: 120,
-        spread: 70,
-        startVelocity: 55,
-        scalar: 0.4,        // 超極小の火花
+        spread: 90,
+        startVelocity: 65,
+        scalar: 0.4,
         origin: { x: 1, y: 0.8 },
-        colors: goldSilver
+        colors: colorfulGlitters
       });
+
+      // 4. 0.15秒後に追撃で画面上部から星屑のように降り注ぐ演出
+      setTimeout(() => {
+        confetti({
+          particleCount: 100,
+          spread: 180,
+          startVelocity: 30,
+          scalar: 0.5,
+          ticks: 200,
+          origin: { y: 0.2 },
+          colors: colorfulGlitters
+        });
+      }, 150);
 
       setTimeout(() => {
         chara.classList.remove('jump');
       }, 500);
     }
+
+
+
+
     // --- クイズデータ（全3問） ---
     const quizData = [
       {
