@@ -129,44 +129,51 @@
   </div>
 
   <script>
-// 細かい火花がパチパチ弾ける花火演出
+// 金色・銀色の細かい火花が大量に弾けるゴージャス花火演出
     function charaAction() {
       const chara = document.getElementById('myChara');
       chara.classList.add('jump');
 
-      // 1. 中央から打ち上がる細かい火花（粒を小さく・数を多く）
+      // 金色と銀色を基調にしたゴージャスなカラーパレット
+      const goldSilver = ['#FFD700', '#FFA500', '#C0C0C0', '#E6E6FA', '#FFFFFF', '#FF69B4'];
+
+      // 1. 中央から一気に吹き出す金色・銀色の大量の細かな火花
       confetti({
-        particleCount: 150, // 粒の数を増加
-        spread: 100,        // 広がり
-        startVelocity: 45,  // 打ち上げる勢い
-        scalar: 0.6,        // 粒の大きさを小さく（デフォルトは1）
-        ticks: 200,         // 画面に残る時間を少し長く
-        origin: { y: 0.6 }
+        particleCount: 200, // 粒の数を大量に増量！
+        spread: 120,        // 広がりを大きく
+        startVelocity: 50,  // 打ち上げる勢い
+        scalar: 0.5,        // 火花のように粒を小さく
+        ticks: 250,         // 画面に残る時間を長く
+        origin: { y: 0.6 },
+        colors: goldSilver
       });
 
-      // 2. 左右から弾ける金色の細かい花火
+      // 2. 左下から打ち上がるキラキラの金銀クラッカー
       confetti({
-        particleCount: 80,
+        particleCount: 100,
         angle: 60,
-        spread: 80,
-        scalar: 0.5,        // さらに細かい火花
-        origin: { x: 0, y: 0.7 },
-        colors: ['#ffd700', '#ffaa00', '#ff69b4', '#ffffff']
+        spread: 70,
+        startVelocity: 55,
+        scalar: 0.4,        // 超極小の火花
+        origin: { x: 0, y: 0.8 },
+        colors: goldSilver
       });
+
+      // 3. 右下から打ち上がるキラキラの金銀クラッカー
       confetti({
-        particleCount: 80,
+        particleCount: 100,
         angle: 120,
-        spread: 80,
-        scalar: 0.5,        // さらに細かい火花
-        origin: { x: 1, y: 0.7 },
-        colors: ['#ffd700', '#ffaa00', '#ff69b4', '#ffffff']
+        spread: 70,
+        startVelocity: 55,
+        scalar: 0.4,        // 超極小の火花
+        origin: { x: 1, y: 0.8 },
+        colors: goldSilver
       });
 
       setTimeout(() => {
         chara.classList.remove('jump');
       }, 500);
     }
-
     // --- クイズデータ（全3問） ---
     const quizData = [
       {
