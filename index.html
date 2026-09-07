@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <title>ƒ}ƒ}‚¨’a¶“ú‚¨‚ß‚Å‚Æ‚¤I</title>
+  <title>ãƒãƒãŠèª•ç”Ÿæ—¥ãŠã‚ã§ã¨ã†ï¼</title>
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
   <style>
     body {
@@ -10,13 +10,13 @@
       background-color: #fff0f5;
       font-family: sans-serif;
     }
-    /* ƒLƒƒƒ‰ƒNƒ^[‚ÌƒXƒ^ƒCƒ‹İ’è */
+    /* ã‚­ãƒ£ãƒ©ã‚¯ã‚¿ãƒ¼ã®ã‚¹ã‚¿ã‚¤ãƒ«è¨­å®š */
     .character {
       width: 120px;
       transition: transform 0.3s ease;
       cursor: pointer;
     }
-    /* ’µ‚Ë‚éƒAƒjƒ[ƒVƒ‡ƒ“ƒNƒ‰ƒX */
+    /* è·³ã­ã‚‹ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã‚¯ãƒ©ã‚¹ */
     .jump {
       animation: jump-up 0.5s ease;
     }
@@ -29,27 +29,27 @@
 </head>
 <body>
 
-  <h1>ƒ}ƒ}A‚¨’a¶“ú‚¨‚ß‚Å‚Æ‚¤I</h1>
+  <h1>ãƒãƒã€ãŠèª•ç”Ÿæ—¥ãŠã‚ã§ã¨ã†ï¼</h1>
 
-  <!-- ƒLƒƒƒ‰ƒNƒ^[‰æ‘œiƒNƒŠƒbƒN‚µ‚Ä‚à’µ‚Ë‚Ü‚·j -->
+  <!-- ã‚­ãƒ£ãƒ©ã‚¯ã‚¿ãƒ¼ç”»åƒï¼ˆã‚¯ãƒªãƒƒã‚¯ã—ã¦ã‚‚è·³ã­ã¾ã™ï¼‰ -->
   <div>
-    <img id="myChara" class="character" src="https://api.iconify.design/noto:cat-face.svg" alt="‚Ë‚±‚¿‚á‚ñ" onclick="charaAction()">
+    <img id="myChara" class="character" src="https://api.iconify.design/noto:cat-face.svg" alt="ã­ã“ã¡ã‚ƒã‚“" onclick="charaAction()">
   </div>
 
-  <p>‚Ë‚±‚¿‚á‚ñ‚ğƒ^ƒbƒv‚·‚é‚©Aƒ{ƒ^ƒ“‚ğ‰Ÿ‚µ‚Ä‚ËI</p>
-  <button onclick="charaAction()" style="padding: 10px 20px; font-size: 1.2rem;">? ‚¨j‚¢‚·‚éI</button>
+  <p>ã­ã“ã¡ã‚ƒã‚“ã‚’ã‚¿ãƒƒãƒ—ã™ã‚‹ã‹ã€ãƒœã‚¿ãƒ³ã‚’æŠ¼ã—ã¦ã­ï¼</p>
+  <button onclick="charaAction()" style="padding: 10px 20px; font-size: 1.2rem;">ğŸ† ãŠç¥ã„ã™ã‚‹ï¼</button>
 
   <script>
     function charaAction() {
       const chara = document.getElementById('myChara');
       
-      // ƒWƒƒƒ“ƒvƒAƒjƒ[ƒVƒ‡ƒ“‚ğ“K—p
+      // ã‚¸ãƒ£ãƒ³ãƒ—ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã‚’é©ç”¨
       chara.classList.add('jump');
       
-      // ‰Ô‰Î‚ğ‚ ‚°‚é
+      // èŠ±ç«ã‚’ã‚ã’ã‚‹
       confetti({ particleCount: 80, spread: 60 });
 
-      // ƒAƒjƒ[ƒVƒ‡ƒ“‚ªI‚í‚Á‚½‚çƒNƒ‰ƒX‚ğŠO‚·iÄ“x‰Ÿ‚¹‚é‚æ‚¤‚É‚·‚éj
+      // ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ãŒçµ‚ã‚ã£ãŸã‚‰ã‚¯ãƒ©ã‚¹ã‚’å¤–ã™ï¼ˆå†åº¦æŠ¼ã›ã‚‹ã‚ˆã†ã«ã™ã‚‹ï¼‰
       setTimeout(() => {
         chara.classList.remove('jump');
       }, 500);
