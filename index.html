@@ -6,7 +6,7 @@
   <title>ママお誕生日おめでとう！</title>
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
   <style>
-    /* 背景をパステル調の虹色グラデーションに設定 */
+    /* 背景：パステル調の虹色グラデーション */
     body {
       text-align: center;
       background: linear-gradient(135deg, #ffdde1, #ee9ca7, #ffdde1, #a8edea, #fed6e3, #d4fc79);
@@ -23,7 +23,7 @@
       100% { background-position: 0% 50%; }
     }
 
-    /* タイトルを鮮やかなピンク色に変更 */
+    /* タイトル：ピンク色 */
     h1 {
       color: #ff1493;
       text-shadow: 2px 2px 4px rgba(255, 255, 255, 0.8);
@@ -31,14 +31,17 @@
       margin-top: 20px;
     }
 
-    /* キャラクターのスタイル設定 */
-    .character {
-      width: 120px;
-      transition: transform 0.3s ease;
+    /* キャラクター表示エリア */
+    .character-container {
+      display: inline-block;
       cursor: pointer;
+      transition: transform 0.2s;
+    }
+    .character-container:hover {
+      transform: scale(1.05);
     }
 
-    /* 跳ねるアニメーションクラス */
+    /* 跳ねるアニメーション */
     .jump {
       animation: jump-up 0.5s ease;
     }
@@ -48,7 +51,7 @@
       100% { transform: translateY(0) scale(1); }
     }
 
-    /* クイズコーナーのスタイル */
+    /* クイズコーナー */
     .quiz-container {
       max-width: 500px;
       margin: 30px auto 20px;
@@ -107,12 +110,40 @@
 
   <h1>ママ、お誕生日おめでとう！</h1>
 
-  <!-- キャラクター画像 -->
-  <div>
-    <img id="myChara" class="character" src="https://api.iconify.design/noto:cat-face.svg" alt="ねこちゃん" onclick="charaAction()">
+  <!-- 新しいオリジナルキャラクター（クリックでジャンプ＆花火） -->
+  <div id="myChara" class="character-container" onclick="charaAction()">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 320" width="160" height="213">
+      <!-- 両手（バンザイ） -->
+      <path d="M 65,115 C 20,100 15,45 60,70 Q 70,80 75,100 Z" fill="#FFF3D6" stroke="#222" stroke-width="6" stroke-linejoin="round"/>
+      <path d="M 175,115 C 220,100 225,45 180,70 Q 170,80 165,100 Z" fill="#FFF3D6" stroke="#222" stroke-width="6" stroke-linejoin="round"/>
+      
+      <!-- 体と足 -->
+      <path d="M 120,20 
+               C 185,20 185,140 185,210 
+               C 185,280 165,305 140,305 
+               C 122,305 120,270 120,230 
+               C 120,270 118,305 100,305 
+               C 75,305 55,280 55,210 
+               C 55,140 55,20 120,20 Z" 
+            fill="#FFF3D6" stroke="#222" stroke-width="6" stroke-linejoin="round"/>
+
+      <!-- お腹の2本ライン（赤い模様） -->
+      <path d="M 58,105 Q 120,135 182,110 Q 120,115 58,105 Z" fill="#D81B27"/>
+      <path d="M 57,145 Q 120,175 183,150 Q 120,155 57,145 Z" fill="#D81B27"/>
+
+      <!-- 股の仕切り線 -->
+      <line x1="120" y1="230" x2="120" y2="300" stroke="#222" stroke-width="6" stroke-linecap="round"/>
+
+      <!-- つぶらな目（縦線2本） -->
+      <line x1="102" y1="42" x2="102" y2="52" stroke="#222" stroke-width="5" stroke-linecap="round"/>
+      <line x1="114" y1="42" x2="114" y2="52" stroke="#222" stroke-width="5" stroke-linecap="round"/>
+
+      <!-- にっこり口 -->
+      <path d="M 85,55 Q 110,85 130,58" fill="none" stroke="#222" stroke-width="6" stroke-linecap="round"/>
+    </svg>
   </div>
 
-  <p>ねこちゃんをタップするか、ボタンを押してね！</p>
+  <p>キャラクターをタップするか、ボタンを押してね！</p>
   <button onclick="charaAction()" style="padding: 12px 25px; font-size: 1.2rem; background-color: #ff69b4; color: white; border: none; border-radius: 25px; cursor: pointer; box-shadow: 0 4px 8px rgba(0,0,0,0.2);">🎆 お祝いする！</button>
 
   <!-- クイズコーナー（3問形式） -->
@@ -121,7 +152,7 @@
     <div class="quiz-question" id="quizQuestion">第1問：ママが一番好きな食べものはどれでしょう？</div>
     
     <div id="quizOptions">
-      <!-- 選択肢がJavaScriptで切り替わります -->
+      <!-- 選択肢 -->
     </div>
 
     <div id="quizResult"></div>
@@ -129,20 +160,19 @@
   </div>
 
   <script>
-// 金銀＋カラフル豪華ネオンカラーが爆発する超ド派手花火演出
+    // 金銀＋華やかカラーの豪華花火演出
     function charaAction() {
       const chara = document.getElementById('myChara');
       chara.classList.add('jump');
 
-      // 金銀＋超華やかなパステル＆ネオンカラーのスペシャルミックス
       const colorfulGlitters = [
-        '#FFD700', '#C0C0C0', '#FFFFFF', // 金・銀・白
-        '#FF007F', '#FF69B4', '#FF1493', // 派手なピンク
-        '#00F5D4', '#7B2CBF', '#FF9E00', // エメラルドグリーン・紫・ビビッドオレンジ
-        '#00BBF9', '#F15BB5', '#FEE440'  # ネオンブルー・マゼンタ・イエロー
+        '#FFD700', '#C0C0C0', '#FFFFFF',
+        '#FF007F', '#FF69B4', '#FF1493',
+        '#00F5D4', '#7B2CBF', '#FF9E00',
+        '#00BBF9', '#F15BB5', '#FEE440'
       ];
 
-      // 1. ドカンと中央から弾ける超大量の細かいカラフル火花（250発）
+      // 中央爆発（250発）
       confetti({
         particleCount: 250,
         spread: 140,
@@ -153,7 +183,7 @@
         colors: colorfulGlitters
       });
 
-      // 2. 左下から斜め上に打ち上がる華やかなキラキラ（150発）
+      // 左右からの打ち上げ（各150発）
       confetti({
         particleCount: 150,
         angle: 60,
@@ -164,7 +194,6 @@
         colors: colorfulGlitters
       });
 
-      // 3. 右下から斜め上に打ち上がる華やかなキラキラ（150発）
       confetti({
         particleCount: 150,
         angle: 120,
@@ -175,7 +204,7 @@
         colors: colorfulGlitters
       });
 
-      // 4. 0.15秒後に追撃で画面上部から星屑のように降り注ぐ演出
+      // 時間差追撃（100発）
       setTimeout(() => {
         confetti({
           particleCount: 100,
@@ -193,10 +222,7 @@
       }, 500);
     }
 
-
-
-
-    // --- クイズデータ（全3問） ---
+    // クイズデータ
     const quizData = [
       {
         question: "第1問：ママが一番好きな食べものはどれでしょう？",
@@ -215,7 +241,7 @@
         ]
       },
       {
-        question: "第3問：ママが休みの日にしたいことはどれでしょう？",
+        question: "第3問：ママが休みにしたいことはどれでしょう？",
         options: [
           { text: "1. お買い物", correct: false },
           { text: "2. のんびりお昼寝", correct: true },
@@ -226,7 +252,6 @@
 
     let currentQuiz = 0;
 
-    // クイズの表示更新
     function loadQuiz() {
       const q = quizData[currentQuiz];
       document.getElementById('quizNum').innerText = `🧩 ママクイズ (${currentQuiz + 1}/3問) 🧩`;
@@ -246,15 +271,13 @@
       });
     }
 
-    // 正誤判定
     function checkAnswer(isCorrect) {
       const result = document.getElementById('quizResult');
       if (isCorrect) {
         result.innerText = "大正解！🎉 すごい！";
         result.style.color = "#ff1493";
-        charaAction(); // 花火＆花びら
+        charaAction();
 
-        // 最終問題でなければ「次へ」ボタンを表示
         if (currentQuiz < quizData.length - 1) {
           document.getElementById('nextBtn').style.display = "inline-block";
         } else {
@@ -266,13 +289,11 @@
       }
     }
 
-    // 次のクイズへ
     function nextQuiz() {
       currentQuiz++;
       loadQuiz();
     }
 
-    // 初期読み込み時に第1問を表示
     loadQuiz();
   </script>
 
