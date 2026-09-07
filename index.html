@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>ママお誕生日おめでとう！</title>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
+  <style>
+    body {
+      text-align: center;
+      background-color: #fff0f5;
+      font-family: sans-serif;
+    }
+    /* キャラクターのスタイル設定 */
+    .character {
+      width: 120px;
+      transition: transform 0.3s ease;
+      cursor: pointer;
+    }
+    /* 跳ねるアニメーションクラス */
+    .jump {
+      animation: jump-up 0.5s ease;
+    }
+    @keyframes jump-up {
+      0%   { transform: translateY(0) scale(1); }
+      50%  { transform: translateY(-50px) scale(1.1); }
+      100% { transform: translateY(0) scale(1); }
+    }
+  </style>
+</head>
+<body>
+
+  <h1>ママ、お誕生日おめでとう！</h1>
+
+  <!-- キャラクター画像（クリックしても跳ねます） -->
+  <div>
+    <img id="myChara" class="character" src="https://api.iconify.design/noto:cat-face.svg" alt="ねこちゃん" onclick="charaAction()">
+  </div>
+
+  <p>ねこちゃんをタップするか、ボタンを押してね！</p>
+  <button onclick="charaAction()" style="padding: 10px 20px; font-size: 1.2rem;">? お祝いする！</button>
+
+  <script>
+    function charaAction() {
+      const chara = document.getElementById('myChara');
+      
+      // ジャンプアニメーションを適用
+      chara.classList.add('jump');
+      
+      // 花火をあげる
+      confetti({ particleCount: 80, spread: 60 });
+
+      // アニメーションが終わったらクラスを外す（再度押せるようにする）
+      setTimeout(() => {
+        chara.classList.remove('jump');
+      }, 500);
+    }
+  </script>
+
+</body>
+</html>
